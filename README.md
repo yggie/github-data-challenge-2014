@@ -1,2 +1,1 @@
-github-data-challenge-2014
-==========================
+# GitHub Data Challenge 2014
