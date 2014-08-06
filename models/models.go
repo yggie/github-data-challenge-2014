@@ -17,13 +17,3 @@ func ParseEvents(data []byte) []Event {
 	}
 	return events[0:count]
 }
-
-func NewEvent(raw interface{}) (Event, bool) {
-	object := raw.(map[string]interface{})
-	switch object["type"] {
-	case "PushEvent":
-		return NewPushEvent(object), true
-	}
-
-	return nil, false
-}

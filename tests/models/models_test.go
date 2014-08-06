@@ -31,12 +31,12 @@ var _ = Describe("ParseEvents", func() {
 			Expect(events[0].Type()).ToNot(BeEmpty())
 		})
 
-		It("should parse the actor information", func() {
-			Expect(events[0].Actor().Login).ToNot(BeEmpty())
+		It("should parse the user information", func() {
+			Expect(events[0].User().Login()).ToNot(BeEmpty())
 		})
 
 		It("should parse the repository information", func() {
-			Expect(events[0].Repo().Name).ToNot(BeEmpty())
+			Expect(events[0].Repository().Name()).ToNot(BeEmpty())
 		})
 	})
 })
