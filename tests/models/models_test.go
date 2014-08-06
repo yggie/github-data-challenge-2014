@@ -19,6 +19,10 @@ var _ = Describe("ParseEvents", func() {
 			events = models.ParseEvents(json)
 		})
 
+		AfterEach(func() {
+			models.ClearEvents()
+		})
+
 		It("should parse exactly 15 Events out of 30", func() {
 			Expect(events).To(HaveLen(15))
 		})
@@ -37,6 +41,16 @@ var _ = Describe("ParseEvents", func() {
 
 		It("should parse the repository information", func() {
 			Expect(events[0].Repository().Name()).ToNot(BeEmpty())
+		})
+
+		It("should be persistable", func() {
+			before := models.CountEvents()
+			err := models.Persist(events[0])
+			if err != nil {
+				panic(err)
+			}
+			after := models.CountEvents()
+			Expect(after - before).To(Equal(1))
 		})
 	})
 })
