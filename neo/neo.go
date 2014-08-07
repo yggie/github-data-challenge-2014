@@ -15,24 +15,3 @@ func init() {
 func DB() *neoism.Database {
 	return db
 }
-
-type Type int
-
-const (
-	EVENTS Type = iota
-	USERS
-	REPOSITORIES
-	COMMITS
-	LANGUAGES
-	ALL
-)
-
-var (
-	class = map[Type]string{
-		EVENTS:       "Event",
-		USERS:        "User",
-		REPOSITORIES: "Repository",
-		COMMITS:      "Commit",
-		LANGUAGES:    "Language",
-	}
-)

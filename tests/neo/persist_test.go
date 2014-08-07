@@ -11,10 +11,6 @@ var _ = Describe("Persist", func() {
 	neo.Clear(neo.ALL)
 	var err error
 
-	AfterEach(func() {
-		neo.Clear(neo.ALL)
-	})
-
 	Context("PersistPushEvent", func() {
 		var pushEvent models.PushEvent
 
@@ -38,6 +34,11 @@ var _ = Describe("Persist", func() {
 						Id:   1,
 						Name: "my-repo",
 						Url:  "http://github.com/randomguy/my-repo",
+						Languages: models.Languages{
+							models.C:     3000,
+							models.RUBY:  6000,
+							models.SHELL: 3000,
+						},
 					},
 				},
 			}
@@ -55,6 +56,14 @@ var _ = Describe("Persist", func() {
 
 		It("should persist the repository object", func() {
 			Expect(neo.Count(neo.REPOSITORIES)).To(Equal(1))
+		})
+
+		It("should persist the user object", func() {
+			Expect(neo.Count(neo.USERS)).To(Equal(1))
+		})
+
+		It("should persist the languages object", func() {
+			Expect(neo.Count(neo.LANGUAGES)).To(Equal(3))
 		})
 	})
 })

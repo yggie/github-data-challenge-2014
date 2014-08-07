@@ -10,7 +10,7 @@ func PersistPushEvent(event *models.PushEvent) error {
 
 	if !CheckExists(EVENTS, event.Id) {
 		query := neoism.CypherQuery{
-			Statement: `CREATE (:Event { id: {id}, type: {type}, created_at: {created_at} })`,
+			Statement: `CREATE (:` + string(EVENTS) + ` { id: {id}, type: {type}, created_at: {created_at} })`,
 			Parameters: neoism.Props{
 				"id":         event.Id,
 				"type":       event.EventType,
@@ -23,12 +23,48 @@ func PersistPushEvent(event *models.PushEvent) error {
 
 	repository := event.Repository
 	if !CheckExists(REPOSITORIES, repository.Id) {
-		query := neoism.CypherQuery{
-			Statement: `CREATE (:Repository { id: {id}, name: {name}, url: {url} })`,
+		query := &neoism.CypherQuery{
+			Statement: `CREATE (:` + string(REPOSITORIES) + ` { id: {id}, name: {name}, url: {url} })`,
 			Parameters: neoism.Props{
 				"id":   repository.Id,
 				"name": repository.Name,
 				"url":  repository.Url,
+			},
+		}
+
+		queries = append(queries, query)
+
+		distribution := repository.LanguageDistribution()
+		for key, value := range distribution {
+			query = &neoism.CypherQuery{
+				Statement: `
+					MATCH (r:` + string(REPOSITORIES) + ` { id: {repository_id} })
+					CREATE UNIQUE (r)-[:` + string(WRITTEN_IN) + ` { weight: {weight} }]->(:` + string(LANGUAGES) + ` { name: {name} })`,
+				Parameters: neoism.Props{
+					"repository_id": repository.Id,
+					"name":          key,
+					"weight":        value,
+				},
+			}
+
+			queries = append(queries, query)
+		}
+	}
+
+	user := event.User
+	if !CheckExists(USERS, user.Id) {
+		query := neoism.CypherQuery{
+			Statement: `CREATE (:` + string(USERS) + ` {
+				id: {id},
+				login: {login},
+				gravatar_id: {gravatar_id},
+				avatar_url: {avatar_url}
+			})`,
+			Parameters: neoism.Props{
+				"id":          user.Id,
+				"login":       user.Login,
+				"gravatar_id": user.GravatarId,
+				"avatar_url":  user.AvatarUrl,
 			},
 		}
 
