@@ -8,7 +8,7 @@ import (
 func PersistPushEvent(event *models.PushEvent) error {
 	queries := make([]*neoism.CypherQuery, 0)
 
-	if !CheckExists("Event", event.Id) {
+	if !CheckExists(EVENTS, event.Id) {
 		query := neoism.CypherQuery{
 			Statement: `CREATE (:Event { id: {id}, type: {type}, created_at: {created_at} })`,
 			Parameters: neoism.Props{
@@ -22,7 +22,7 @@ func PersistPushEvent(event *models.PushEvent) error {
 	}
 
 	repository := event.Repository
-	if !CheckExists("Repository", repository.Id) {
+	if !CheckExists(REPOSITORIES, repository.Id) {
 		query := neoism.CypherQuery{
 			Statement: `CREATE (:Repository { id: {id}, name: {name}, url: {url} })`,
 			Parameters: neoism.Props{

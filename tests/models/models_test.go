@@ -26,7 +26,7 @@ var _ = Describe("ParseEvents", func() {
 		})
 
 		AfterEach(func() {
-			neo.ClearEvents()
+			neo.Clear(neo.ALL)
 		})
 
 		It("should parse exactly 15 Events out of 30", func() {
@@ -50,12 +50,12 @@ var _ = Describe("ParseEvents", func() {
 		})
 
 		It("should be persistable", func() {
-			before := neo.CountEvents()
+			before := neo.Count(neo.EVENTS)
 			err := neo.PersistPushEvent(pushEvents[0])
 			if err != nil {
 				panic(err)
 			}
-			after := neo.CountEvents()
+			after := neo.Count(neo.EVENTS)
 			Expect(after - before).To(Equal(1))
 		})
 	})
