@@ -1,21 +1,17 @@
 package models
 
-// Constructs an appropriate Event struct based on the type provided
-func NewEvent(raw interface{}) (Event, bool) {
-	object := raw.(map[string]interface{})
-	switch object["type"] {
-	case "PushEvent":
-		return NewPushEvent(object), true
-	}
-
-	return nil, false
-}
-
-// Shared interface for a GitHub Event
-type Event interface {
-	Id() int64
-	Type() string
-	CreatedAt() string
-	User() *User
-	Repository() *Repository
+// A shared representation of a GitHub API Event object, exposes a simple
+// interface to get the properties of the Event
+type Event struct {
+	Id int64
+	// The Event type, can be one of the following:
+	// CommitCommentEvent, CreateEvent, DeleteEvent, DeploymentEvent,
+	// DeploymentStatusEvent, DownloadEvent, FollowEvent, ForkEvent, ForkApplyEvent,
+	// GistEvent, GollumEvent, IssueCommentEvent, IssueEvent, MemberEvent,
+	// PageBuildEvent, PublicEvent, PullRequestEvent, PullRequestReviewCommentEvent,
+	// PushEvent, ReleaseEvent, StatusEvent, TeamAddEvent, WatchEvent
+	EventType  string
+	CreatedAt  string
+	User       *User
+	Repository *Repository
 }

@@ -1,10 +1,6 @@
-package models
+package neo
 
 import "github.com/jmcvetta/neoism"
-
-type Tracked interface {
-	Id() int64
-}
 
 func CountEvents() int {
 	var result interface{}
@@ -22,12 +18,12 @@ func CountEvents() int {
 	return int(res["count"].(float64) + 0.5)
 }
 
-func CheckExists(modelName string, object Tracked) bool {
+func CheckExists(modelName string, id int64) bool {
 	var result []interface{}
 	query := neoism.CypherQuery{
 		Statement: `MATCH (e:` + modelName + ` { id: {id} }) RETURN count(*) as count`,
 		Parameters: neoism.Props{
-			"id": object.Id(),
+			"id": id,
 		},
 		Result: &result,
 	}
